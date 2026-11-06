@@ -87,3 +87,8 @@ export function createPlan(input: CreatePlanInput): Plan {
 
   return plan;
 }
+
+export function saveSubscriptionLink(input: { streamId: string; planId: string; subscriberWallet: string }) {
+  const db = getDatabase();
+  db.prepare(`INSERT OR REPLACE INTO subscription_links (stream_id, plan_id, subscriber_wallet, created_at) VALUES (?, ?, ?, ?)`).run(input.streamId, input.planId, input.subscriberWallet, new Date().toISOString());
+}
