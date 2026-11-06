@@ -12,6 +12,10 @@
   },
   "dependencies": {
     "@solana/spl-token": "0.4.9",
+    "@solana/wallet-adapter-phantom": "^0.9.26",
+    "@solana/wallet-adapter-react": "^0.15.38",
+    "@solana/wallet-adapter-react-ui": "^0.9.38",
+    "@solana/wallet-adapter-solflare": "^0.6.30",
     "@solana/web3.js": "1.98.4",
     "@streamflow/stream": "13.4.0",
     "next": "16.4.5",
