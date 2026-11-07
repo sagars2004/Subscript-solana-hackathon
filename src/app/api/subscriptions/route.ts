@@ -1,12 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listSubscriptionLinks, saveSubscriptionLink } from "@/lib/db";
+import { listMerchantSubscriptions, listSubscriptionLinks, saveSubscriptionLink } from "@/lib/db";
 
 export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
-  const wallet = request.nextUrl.searchParams.get("subscriberWallet");
-  if (!wallet) return NextResponse.json({ error: "subscriberWallet is required." }, { status: 400 });
-  return NextResponse.json({ subscriptions: listSubscriptionLinks(wallet) });
+  const subscriberWallet = request.nextUrl.searchParams.get("subscriberWallet");
+  const merchantWallet = request.nextUrl.searchParams.get("merchantWallet");
+
+  if (merchantWallet) {
+    return NextResponse.json({ subscriptions: listMerchantSubscriptions(merchantWallet) });
+  }
+  if (subscriberWallet) {
+    return NextResponse.json({ subscriptions: listSubscriptionLinks(subscriberWallet) });
+  }
+  return NextResponse.json({ error: "subscriberWallet or merchantWallet is required." }, { status: 400 });
 }
 
 export async function POST(request: NextRequest) {

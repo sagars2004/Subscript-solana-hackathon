@@ -97,3 +97,33 @@ export function listSubscriptionLinks(subscriberWallet: string) {
   const db = getDatabase();
   return db.prepare(`SELECT stream_id as streamId, plan_id as planId, subscriber_wallet as subscriberWallet, created_at as createdAt FROM subscription_links WHERE subscriber_wallet = ? ORDER BY created_at DESC`).all(subscriberWallet) as { streamId: string; planId: string; subscriberWallet: string; createdAt: string }[];
 }
+
+export type MerchantSubscription = {
+  streamId: string;
+  planId: string;
+  planName: string;
+  subscriberWallet: string;
+  priceMicrousd: number;
+  billingPeriodSeconds: number;
+  createdAt: string;
+};
+
+export function listMerchantSubscriptions(merchantWallet: string): MerchantSubscription[] {
+  const db = getDatabase();
+  return db
+    .prepare(
+      `SELECT
+        sl.stream_id as streamId,
+        sl.plan_id as planId,
+        p.name as planName,
+        sl.subscriber_wallet as subscriberWallet,
+        p.price_microusd as priceMicrousd,
+        p.billing_period_seconds as billingPeriodSeconds,
+        sl.created_at as createdAt
+       FROM subscription_links sl
+       JOIN plans p ON sl.plan_id = p.id
+       WHERE p.merchant_wallet = ?
+       ORDER BY sl.created_at DESC`,
+    )
+    .all(merchantWallet) as MerchantSubscription[];
+}
