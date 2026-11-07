@@ -92,3 +92,8 @@ export function saveSubscriptionLink(input: { streamId: string; planId: string; 
   const db = getDatabase();
   db.prepare(`INSERT OR REPLACE INTO subscription_links (stream_id, plan_id, subscriber_wallet, created_at) VALUES (?, ?, ?, ?)`).run(input.streamId, input.planId, input.subscriberWallet, new Date().toISOString());
 }
+
+export function listSubscriptionLinks(subscriberWallet: string) {
+  const db = getDatabase();
+  return db.prepare(`SELECT stream_id as streamId, plan_id as planId, subscriber_wallet as subscriberWallet, created_at as createdAt FROM subscription_links WHERE subscriber_wallet = ? ORDER BY created_at DESC`).all(subscriberWallet) as { streamId: string; planId: string; subscriberWallet: string; createdAt: string }[];
+}

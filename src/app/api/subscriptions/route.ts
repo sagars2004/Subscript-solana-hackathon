@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { saveSubscriptionLink } from "@/lib/db";
+import { listSubscriptionLinks, saveSubscriptionLink } from "@/lib/db";
 
 export const runtime = "nodejs";
+
+export async function GET(request: NextRequest) {
+  const wallet = request.nextUrl.searchParams.get("subscriberWallet");
+  if (!wallet) return NextResponse.json({ error: "subscriberWallet is required." }, { status: 400 });
+  return NextResponse.json({ subscriptions: listSubscriptionLinks(wallet) });
+}
 
 export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => undefined)) as Record<string, unknown> | undefined;
