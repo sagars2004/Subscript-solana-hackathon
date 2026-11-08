@@ -1,10 +1,18 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import { NavHeader } from "@/components/ui/nav-header";
 
-const SubscriberDashboard = dynamic(() => import("@/app/subscriber/subscriber-dashboard").then((module) => module.SubscriberDashboard), { ssr: false });
+const SubscriberDashboard = dynamic(
+  () => import("@/app/subscriber/subscriber-dashboard").then((module) => module.SubscriberDashboard),
+  { ssr: false },
+);
 
 export default function SubscriberPage() {
-  return <main className="shell"><Link className="back-link" href="/">← Back to Subscript</Link><SubscriberDashboard /></main>;
+  return (
+    <main className="shell">
+      <NavHeader activeRoute="subscriber" />
+      <SubscriberDashboard />
+    </main>
+  );
 }
